@@ -34,7 +34,7 @@ export default {
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
-  padding: 10px 5px 60px;
+  padding: 10px 5px;
   font-size: 14px;
 }
 </style>

@@ -1,25 +1,31 @@
 <template>
-  <div>
+  <div class="home">
     <nav-bar class="home-nav">
       <template #center>
         <span>购物街</span>
       </template>
     </nav-bar>
-    <home-swiper :banners="banner" />
-    <recommend-view :recommends="recommend" />
-    <feature-view />
-    <tab-control class="tab-control" :title="['流行','新款','精选']" @active="activeTitle" />
-    <goods :goodslist="goods[currentType].list" />
+    <b-scroll class="content" ref="scroll" @scrollY="getScrollY" @pullingUp="getMore">
+      <home-swiper :banners="banner" />
+      <recommend-view :recommends="recommend" />
+      <feature-view />
+      <tab-control class="tab-control" :title="['流行','新款','精选']" @active="activeTitle" />
+      <goods :goodslist="goods[currentType].list" />
+    </b-scroll>
+    <back @click.native="backClick" :probeType="3" :class="{backTop: isBackTop}" />
   </div>
 </template>
 
 <script>
 import { getHomeMultidata, getHomeGoods } from "network/home";
 
+import NavBar from "components/common/navbar/NavBar";
+import BScroll from "components/common/betterscroll/BScroll";
+
 import TabControl from "components/content/tabControl/TabControl";
 import Goods from "components/content/goods/Goods";
+import Back from "components/content/back/Back";
 
-import NavBar from "components/common/navbar/NavBar";
 import HomeSwiper from "./childrenComps/HomeSwiper";
 import RecommendView from "./childrenComps/RecommendView";
 import FeatureView from "./childrenComps/FeatureView";
@@ -28,11 +34,13 @@ export default {
   name: "Home",
   components: {
     NavBar,
+    BScroll,
     HomeSwiper,
     RecommendView,
     FeatureView,
     TabControl,
-    Goods
+    Goods,
+    Back
   },
   data() {
     return {
@@ -43,11 +51,12 @@ export default {
         new: { page: 0, list: [] },
         sell: { page: 0, list: [] }
       },
-      currentType: "pop"
+      currentType: "pop",
+      scroll: null,
+      isBackTop: false
     };
   },
   computed: {},
-  methods: {},
   //生命周期 - 创建完成（可以访问当前this实例）
   created() {
     this.homeMultidata();
@@ -57,6 +66,9 @@ export default {
     this.goodsList("sell");
   },
   methods: {
+    /**
+     * 网络请求
+     */
     homeMultidata() {
       getHomeMultidata()
         .then(res => {
@@ -69,13 +81,17 @@ export default {
     },
     goodsList(type) {
       let goods = this.goods[type];
-      let page = goods.page + 1;
-      getHomeGoods(type, page)
+      goods.page = goods.page + 1;
+      console.log(goods.page);
+      getHomeGoods(type, goods.page)
         .then(res => {
           goods.list = [...goods.list, ...res.data.list];
         })
-        .catch(e => console.logvalue(e));
+        .catch(e => console.log(e));
     },
+    /**
+     * 事件监听方法
+     */
     activeTitle(value = "流行") {
       console.log(value);
       if (value === "流行") {
@@ -87,28 +103,60 @@ export default {
       } else {
         return "pop";
       }
+    },
+    backClick() {
+      this.scroll.scrollTo(0, 0, 1000);
+    },
+    getScrollY(position) {
+      // console.log(position.y);
+      this.isBackTop = -position.y < 1000;
+      // console.log(this.isBackTop);
+    },
+    getMore() {
+      console.log("more");
+      this.goodsList(this.currentType);
+      this.scroll.finishPullUp();
     }
   },
   //生命周期 - 挂载完成（可以访问DOM元素）
-  mounted() {},
-  beforeCreate() {}, //生命周期 - 创建之前
-  beforeMount() {}, //生命周期 - 挂载之前
-  beforeUpdate() {}, //生命周期 - 更新之前
-  updated() {}, //生命周期 - 更新之后
-  beforeDestroy() {}, //生命周期 - 销毁之前
-  destroyed() {}, //生命周期 - 销毁完成
-  activated() {} //如果页面有keep-alive缓存功能，这个函数会触发
+  mounted() {
+    this.scroll = this.$refs.scroll;
+    // this.scrollY = this.scroll.getScrollY();
+    // console.log(this.scrollY);
+  }
 };
 </script>
 <style scoped>
+.home {
+  padding-top: 44px;
+  height: 100vh;
+  position: relative;
+}
 .home-nav {
   color: #fff;
   background: var(--color-tint);
+  height: 44px;
+  line-height: 44px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 99;
 }
 .tab-control {
   position: sticky;
   top: 44px;
   z-index: 98;
   background-color: #fff;
+}
+.content {
+  position: absolute;
+  top: 44px;
+  bottom: 49px;
+  left: 0;
+  right: 0;
+}
+.backTop {
+  display: none;
 }
 </style>

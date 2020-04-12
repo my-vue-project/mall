@@ -1,5 +1,5 @@
 <template>
-  <a class="goods-item" :link="goodsitem.link">
+  <a class="goods-item" :href="goodsitem.link">
     <img :src="goodsitem.show.img" alt />
     <div class="goods-title">
       <span class="title">{{goodsitem.title}}</span>
