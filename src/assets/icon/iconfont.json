@@ -1,0 +1,23 @@
+{
+  "id": "",
+  "name": "",
+  "font_family": "iconfont",
+  "css_prefix_text": "icon-",
+  "description": "",
+  "glyphs": [
+    {
+      "icon_id": "242734",
+      "name": "collect",
+      "font_class": "iconfontyishoucang",
+      "unicode": "e618",
+      "unicode_decimal": 58904
+    },
+    {
+      "icon_id": "3143041",
+      "name": "collect",
+      "font_class": "iconfontyishoucang1",
+      "unicode": "e501",
+      "unicode_decimal": 58625
+    }
+  ]
+}

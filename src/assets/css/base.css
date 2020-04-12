@@ -1,0 +1,69 @@
+@import "./normalize.css";
+/*  :root 代表根目录， 这里代表HTML*/
+
+:root {
+  /*  --color-text 定义css 变量下面如果有class要引用此变量
+  通过： border-color: var(--color-tint) 方式引用
+  */
+  --color-text: #666;
+  --color-height-text: #ff5777;
+  --color-tint: #ff8198;
+  --color-background: #fff;
+  --font-size: 14px;
+  --line-height: 1.5;
+}
+
+*, *::before, *::after {
+  margin: 0;
+  padding: 0;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Mircosoft Yahei", "微软雅黑", Arial, sans-serif;
+  user-select: none;
+  /*禁止用户鼠标在页面上选中文字/图片等*/
+  -webkit-tap-highlight-color: transparent;
+  /*webkit是苹果浏览器迎请，
+  tap点击，highlight: 背景高亮，color颜色，颜色用数值调节*/
+  background: var(--color-background);
+  color: var(--color-text);
+  /*  rem vw/vh*/
+  width: 100vw;
+}
+
+a {
+  color: var(--color-text);
+  text-decoration: none;
+}
+
+.clear-fix::after {
+  clear: both;
+  content: '';
+  display: block;
+  width: 0;
+  height: 0;
+  visibility: hidden;
+}
+
+.clear-fix {
+  zoom: 1;
+}
+
+.left {
+  float: left;
+}
+
+.right {
+  float: right;
+}
+
+.icon {
+  width: 1em;
+  height: 1em;
+  vertical-align: -0.15em;
+  fill: currentColor;
+  overflow: hidden;
+}
